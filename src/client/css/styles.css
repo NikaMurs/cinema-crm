@@ -47,6 +47,7 @@ body {
 }
 
 .page-nav .page-nav__day {
+    cursor: pointer;
     flex-basis: calc(100% / 8);
     font-size: 1.2rem;
     padding: 1rem;
@@ -91,6 +92,17 @@ body {
 
 .page-nav .page-nav__day_next::before {
     content: '>';
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 2.4rem;
+}
+
+.page-nav .page-nav__day_prev {
+    text-align: center;
+}
+
+.page-nav .page-nav__day_prev:before {
+    content: '<';
     font-family: monospace;
     font-weight: 700;
     font-size: 2.4rem;
@@ -189,12 +201,21 @@ body {
     margin-right: 4px;
 }
 
+.movie-seances__time-block__disabled {
+    cursor: not-allowed;
+    background-color: #525252;
+    border-radius: 5px;
+}
+
+.movie-seances__time__disabled{
+    cursor: not-allowed;
+}
+
 .movie .movie-seances__hall .movie-seances__time {
     display: block;
     padding: 8px;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.24), 0px 0px 2px rgba(0, 0, 0, 0.12);
     border-radius: 2px;
-    background-color: #FFFFFF;
     color: #000000;
     text-decoration: none;
     font-size: 1.5rem;

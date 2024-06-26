@@ -7,15 +7,16 @@ import './client/css/styles.css'
 import HallPage from './client/pages/HallPage';
 import PaymentPage from './client/pages/PaymentPage';
 import TicketPage from './client/pages/TicketPage';
+import MainLayout from './client/components/MainLayout';
 
 
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<MainPage />} />
-      <Route path='/hall' element={<HallPage />} />
-      <Route path='/payment' element={<PaymentPage />} />
-      <Route path='/ticket' element={<TicketPage />} />
+      <Route path='/' element={<MainLayout><MainPage /></MainLayout>} />
+      <Route path='/hall' element={<MainLayout><HallPage /></MainLayout>} />
+      <Route path='/payment' element={<MainLayout><PaymentPage /></MainLayout>} />
+      <Route path='/ticket' element={<MainLayout><TicketPage /></MainLayout>} />
     </Routes>
   );
 }

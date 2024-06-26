@@ -3,10 +3,6 @@ import qrCode from '../img/qr-code.png'
 export default function TicketPage() {
     return (
         <>
-            <header className="page-header">
-                <h1 className="page-header__title">Идём<span>в</span>кино</h1>
-            </header>
-
             <main>
                 <section className="ticket">
 
