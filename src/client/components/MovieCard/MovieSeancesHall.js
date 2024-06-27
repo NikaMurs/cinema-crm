@@ -1,11 +1,19 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 
 
-export default function MovieSeancesHall({ title, seances, now }) {
+export default function MovieSeancesHall({ filmId, id, title, seances, selectedDay, now }) {
+    const navigate = useNavigate();
+
     function isSeanceDisabled(seanceTime) {
-        return moment(seanceTime, 'HH:mm').isBefore(now);
+        return moment(`${selectedDay} ${seanceTime}`, 'DD.MM HH:mm').isBefore(now);
     }
+
+    const handleClick = (time) => {
+        navigate(`/hall`, { state: { filmId, selectedDay, time, hallId: id } });
+    };
 
     return (
         <div className="movie-seances__hall">
@@ -18,7 +26,7 @@ export default function MovieSeancesHall({ title, seances, now }) {
                             key={index}
                             className={`movie-seances__time-block ${isDisabled ? 'movie-seances__time-block__disabled' : ''}`}
                         >
-                            <a className={`movie-seances__time ${isDisabled ? 'movie-seances__time__disabled' : ''}`} href="/hall">{time}</a>
+                            <a className={`movie-seances__time ${isDisabled ? 'movie-seances__time__disabled' : ''}`} onClick={() => { !isDisabled && handleClick(time) }}>{time}</a>
                         </li>
                     );
                 })}

@@ -3,10 +3,11 @@ import MoviePoster from './MoviePoster';
 import MovieDescription from './MovieDescription';
 import MovieSeancesHall from './MovieSeancesHall';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 export default function MovieCard({ filmInfo }) {
+    const selectedDay = useSelector((state) => state.user.selectedDay);
     const now = moment();
-
 
     return (
         <section className="movie">
@@ -21,7 +22,7 @@ export default function MovieCard({ filmInfo }) {
             </div>
 
             {filmInfo.seancesHalls.map((seancesHall, i) => {
-                return <MovieSeancesHall key={`seancesHall_${filmInfo.title}_${i}`} title={seancesHall.title} seances={seancesHall.seances} now={now} />
+                return <MovieSeancesHall key={`seancesHall_${filmInfo.title}_${i}`} filmId={filmInfo.filmId} id={seancesHall.hallId} title={seancesHall.title} seances={seancesHall.seances} selectedDay={selectedDay} now={now} />
             })}
         </section>
     );

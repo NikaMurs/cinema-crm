@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/ru';
+import { useDispatch } from 'react-redux';
+import { userActions } from '../../store/userReducer'
 
 moment.locale('ru');
 
 export default function DateSlider() {
+    const dispatch = useDispatch();
+
     const today = moment();
     const [selectedDate, setSelectedDate] = useState(today);
     const [daysOfWeek, setDaysOfWeek] = useState([]);
@@ -23,6 +27,7 @@ export default function DateSlider() {
 
     const handleDayClick = (day) => {
         setSelectedDate(day);
+        dispatch(userActions.setSelectedDay(day.format('DD.MM')))
     };
 
     const handlePrevWeek = () => {
