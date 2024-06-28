@@ -22,7 +22,15 @@ export default function MovieCard({ filmInfo }) {
             </div>
 
             {filmInfo.seancesHalls.map((seancesHall, i) => {
-                return <MovieSeancesHall key={`seancesHall_${filmInfo.title}_${i}`} filmId={filmInfo.filmId} id={seancesHall.hallId} title={seancesHall.title} seances={seancesHall.seances} selectedDay={selectedDay} now={now} />
+                return (
+                    <MovieSeancesHall key={`seancesHall_${filmInfo.title}_${i}`}
+                        filmInfo={{ id: filmInfo.filmId, title: filmInfo.title }}
+                        hallInfo={{ id: seancesHall.hallId, title: seancesHall.title }}
+                        title={seancesHall.title}
+                        seances={seancesHall.seances} 
+                        selectedDay={selectedDay}
+                         now={now} />
+                )
             })}
         </section>
     );

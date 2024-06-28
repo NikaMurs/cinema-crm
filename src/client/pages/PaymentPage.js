@@ -1,7 +1,17 @@
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export default function PaymentPage() {
     const navigate = useNavigate();
+
+    const selectedDay = useSelector((state) => state.user.selectedDay);
+    const selectedTime = useSelector((state) => state.user.selectedTime);
+    const selectedHall = useSelector((state) => state.user.selectedHall);
+    const selectedFilm = useSelector((state) => state.user.selectedFilm);
+
+    const selectedChairs = useSelector((state) => state.user.selectedChairs);
+    const totalPrice = useSelector((state) => state.user.totalPrice);
+
 
     return (
         <>
@@ -13,11 +23,15 @@ export default function PaymentPage() {
                     </header>
 
                     <div className="ticket__info-wrapper">
-                        <p className="ticket__info">На фильм: <span className="ticket__details ticket__title">Звёздные войны XXIII: Атака клонированных клонов</span></p>
-                        <p className="ticket__info">Места: <span className="ticket__details ticket__chairs">6, 7</span></p>
-                        <p className="ticket__info">В зале: <span className="ticket__details ticket__hall">1</span></p>
-                        <p className="ticket__info">Начало сеанса: <span className="ticket__details ticket__start">18:30</span></p>
-                        <p className="ticket__info">Стоимость: <span className="ticket__details ticket__cost">600</span> рублей</p>
+                        <p className="ticket__info">На фильм: <span className="ticket__details ticket__title">{selectedFilm.title}</span></p>
+                        <p className="ticket__info">Места: <span className="ticket__details ticket__chairs">
+                            {selectedChairs.map((el, ind) => {
+                                return  ind === selectedChairs.length - 1 ? `${el}` : `${el}, `
+                            })}
+                        </span></p>
+                        <p className="ticket__info">В зале: <span className="ticket__details ticket__hall">{selectedHall.title}</span></p>
+                        <p className="ticket__info">Начало сеанса: <span className="ticket__details ticket__start">{selectedDay} {selectedTime}</span></p>
+                        <p className="ticket__info">Стоимость: <span className="ticket__details ticket__cost">{totalPrice}</span>р</p>
 
                         <button className="acceptin-button" onClick={() => { navigate('/ticket') }}>Получить код бронирования</button>
 

@@ -17,7 +17,7 @@ import Legend from './Legend';
 const HallScheme = ({ rows, price, selectedChairs, setSelectedChairs, totalPrice, setTotalPrice }) => {
 
     const handleSelect = (row, number, isSelected, type) => {
-        const chairId = `${row}-${number}`;
+        const chairId = `${row}/${number}`;
         if (isSelected) {
             setSelectedChairs([...selectedChairs, chairId]);
             setTotalPrice(totalPrice + price[type]);

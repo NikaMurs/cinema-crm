@@ -2,17 +2,23 @@
 import React from 'react';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { userActions } from '../../../store/userReducer';
 
 
-export default function MovieSeancesHall({ filmId, id, title, seances, selectedDay, now }) {
+export default function MovieSeancesHall({ filmInfo, hallInfo, title, seances, selectedDay, now }) {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     function isSeanceDisabled(seanceTime) {
         return moment(`${selectedDay} ${seanceTime}`, 'DD.MM HH:mm').isBefore(now);
     }
 
     const handleClick = (time) => {
-        navigate(`/hall`, { state: { filmId, selectedDay, time, hallId: id } });
+        dispatch(userActions.setSelectedTime(time));
+        dispatch(userActions.setSelectedHall(hallInfo));
+        dispatch(userActions.setSelectedFilm(filmInfo));
+        navigate(`/hall`);
     };
 
     return (

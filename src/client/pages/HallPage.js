@@ -2,24 +2,21 @@ import { useNavigate, useLocation } from "react-router-dom"
 import BuyingFilmInfo from "../components/BuyingFilmInfo";
 import HallScheme from "../components/HallScheme/HallSheme";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../../store/userReducer";
 
 export default function HallPage() {
     const navigate = useNavigate();
-    const location = useLocation();
-    const { filmId, selectedDay, time, hallId } = location.state || {};
+    const dispatch = useDispatch();
+
+    const selectedDay = useSelector((state) => state.user.selectedDay);
+    const selectedTime = useSelector((state) => state.user.selectedTime);
+    const selectedHall = useSelector((state) => state.user.selectedHall);
+    const selectedFilm = useSelector((state) => state.user.selectedFilm);
+
 
     const [selectedChairs, setSelectedChairs] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
-
-
-    //needFetch (запрос инфы о фильме)
-    const filmInfo = {
-        filmId: 1,
-        title: 'Звёздные войны XXIII: Атака клонированных клонов',
-        description: 'Две сотни лет назад малороссийские хутора разоряла шайка нехристей-ляхов во главе с могущественным колдуном',
-        duration: "130 минут",
-        country: "США",
-    }
 
     //needFetch (запрос позиций зала)
     const hallInfo = {
@@ -41,12 +38,23 @@ export default function HallPage() {
         ]
     }
 
+    const handleClick = () => {
+        if (selectedChairs.length) {
+            dispatch(userActions.setSelectedChairs(selectedChairs));
+            dispatch(userActions.setTotalPrice(totalPrice));
+
+            navigate(`/payment`);
+        } else {
+            alert("Вы не выбрали места!")
+        }
+    };
+
 
     return (
         <>
             <main>
                 <section className="buying">
-                    <BuyingFilmInfo filmInfo={filmInfo} hallTitle={hallInfo.title} selectedDay={selectedDay} time={time} />
+                    <BuyingFilmInfo filmTitle={selectedFilm.title} hallTitle={selectedHall.title} selectedDay={selectedDay} time={selectedTime} />
                     <HallScheme rows={hallInfo.rows} price={hallInfo.price}
                         selectedChairs={selectedChairs} setSelectedChairs={setSelectedChairs}
                         totalPrice={totalPrice} setTotalPrice={setTotalPrice}
@@ -54,7 +62,7 @@ export default function HallPage() {
 
                     <p className="buying__price">Общая стоимость: <span className="ticket__details ticket__cost">{totalPrice}</span>р</p>
 
-                    <button className="acceptin-button" onClick={() => { navigate('/payment') }}>
+                    <button className="acceptin-button" onClick={handleClick}>
                         Забронировать
                     </button>
                 </section>
