@@ -1,6 +1,150 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function HallConfiguration({ halls, setHalls }) {
+    const [selectedHall, setSelestedHall] = useState(0);
+    const [rows, setRows] = useState(undefined);
+    const [seats, setSeats] = useState(undefined);
+    const [savedHallState, setSavedHallState] = useState(undefined);
+
+    useEffect(() => {
+        if (!rows) {
+            setRows(halls[selectedHall]?.rows?.length);
+        }
+        if (!seats) {
+            setSeats(halls[selectedHall]?.rows[0]?.length);
+        }
+        if (!savedHallState) {
+            setSavedHallState(halls[selectedHall]);
+        }
+    }, [halls])
+
+    useEffect(() => {
+        setRows(halls[selectedHall]?.rows?.length);
+        setSeats(halls[selectedHall]?.rows[0]?.length);
+        setSavedHallState(halls[selectedHall])
+    }, [selectedHall])
+
+    const handleClickHall = (ind) => {
+        setSelestedHall(ind);
+        handleCancel();
+    }
+
+    const handleChangeRows = (e) => {
+        let value = parseInt(e.target.value, 10);
+        if (isNaN(value) || value < 0) value = 0;
+        if (value > 20) value = 20;
+        setRows(value);
+
+        setHalls((prevHallState) => {
+            const newHallState = [...prevHallState];
+            const newHall = { ...newHallState[selectedHall] };
+
+            if (value >= 0) {
+                const seatsArr = [];
+                for (let i = 0; i < value; i++) {
+                    const row = [];
+                    for (let j = 0; j < seats; j++) {
+                        row.push('standart');
+                    }
+                    seatsArr.push(row);
+                }
+                newHall.rows = seatsArr;
+            }
+
+            newHallState[selectedHall] = newHall;
+            return newHallState;
+        });
+    }
+
+    const handleChangeSeats = (e) => {
+        let value = parseInt(e.target.value, 10);
+        if (isNaN(value) || value < 0) value = 0;
+        if (value > 20) value = 20;
+        setSeats(value);
+
+        setHalls((prevHallState) => {
+            const newHallState = [...prevHallState];
+            const newHall = { ...newHallState[selectedHall] };
+
+            if (value >= 0) {
+                const seatsArr = [];
+                for (let i = 0; i < rows; i++) {
+                    const row = [];
+                    for (let j = 0; j < value; j++) {
+                        row.push('standart');
+                    }
+                    seatsArr.push(row);
+                }
+                newHall.rows = seatsArr;
+            }
+
+            newHallState[selectedHall] = newHall;
+            return newHallState;
+        });
+    }
+
+    const getNextSeatState = (currentSeatState) => {
+        switch (currentSeatState) {
+            case 'disabled':
+                return 'standart';
+            case 'standart':
+                return 'vip';
+            case 'vip':
+                return 'disabled';
+            default:
+                return currentSeatState;
+        }
+    };
+
+    const updateRowSeats = (row, seatIndex) => {
+        return row.map((seat, index) => {
+            if (index === seatIndex) {
+                return getNextSeatState(seat);
+            }
+            return seat;
+        });
+    };
+
+    const updateHallRows = (rows, rowIndex, seatIndex) => {
+        return rows.map((row, index) => {
+            if (index === rowIndex) {
+                return updateRowSeats(row, seatIndex);
+            }
+            return row;
+        });
+    };
+
+    const updateHallState = (halls, hallIndex, rowIndex, seatIndex) => {
+        return halls.map((hall, index) => {
+            if (index === hallIndex) {
+                return { ...hall, rows: updateHallRows(hall.rows, rowIndex, seatIndex) };
+            }
+            return hall;
+        });
+    };
+
+    const handleClickSeat = (row, seat) => {
+        setHalls((prevHallState) => {
+            return updateHallState(prevHallState, selectedHall, row, seat);
+        });
+    };
+
+    const handleCancel = () => {
+        setHalls((prevHallState) => {
+            const newHallState = [...prevHallState];
+
+            newHallState[selectedHall] = savedHallState;
+            return newHallState;
+        });
+        setRows(savedHallState[selectedHall]?.rows?.length);
+        setSeats(savedHallState[selectedHall]?.rows[0]?.length);
+    }
+
+    const handleSave = () => {
+        // fetch запрос на сохранение
+        setSavedHallState(halls[selectedHall]);
+    }
+
     return (
         <section className="conf-step">
             <header className="conf-step__header conf-step__header_opened">
@@ -10,14 +154,15 @@ export default function HallConfiguration({ halls, setHalls }) {
                 <p className="conf-step__paragraph">Выберите зал для конфигурации:</p>
                 <ul className="conf-step__selectors-box">
                     {halls.map((hall, ind) => {
-                        return <li><input type="radio" className="conf-step__radio" name="chairs-hall" value={hall.id} checked={ind === 0} /><span className="conf-step__selector">{hall.title}</span></li>
+                        return <li key={`hallCongif_${ind}`} onClick={() => { handleClickHall(ind) }}><input type="radio" className="conf-step__radio" name="chairs-hall" value={hall.id} checked={ind === selectedHall} /><span className="conf-step__selector">{hall.title}</span></li>
                     })}
                 </ul>
+
                 <p className="conf-step__paragraph">Укажите количество рядов и максимальное количество кресел в ряду:</p>
                 <div className="conf-step__legend">
-                    <label className="conf-step__label">Рядов, шт<input type="text" className="conf-step__input" placeholder="10" /></label>
+                    <label className="conf-step__label">Рядов, шт<input type="text" className="conf-step__input" value={rows} onChange={handleChangeRows} /></label>
                     <span className="multiplier">x</span>
-                    <label className="conf-step__label">Мест, шт<input type="text" className="conf-step__input" placeholder="8" /></label>
+                    <label className="conf-step__label">Мест, шт<input type="text" className="conf-step__input" value={seats} onChange={handleChangeSeats} /></label>
                 </div>
                 <p className="conf-step__paragraph">Теперь вы можете указать типы кресел на схеме зала:</p>
                 <div className="conf-step__legend">
@@ -26,55 +171,24 @@ export default function HallConfiguration({ halls, setHalls }) {
                     <span className="conf-step__chair conf-step__chair_disabled"></span> — заблокированные (нет кресла)
                     <p className="conf-step__hint">Чтобы изменить вид кресла, нажмите по нему левой кнопкой мыши</p>
                 </div>
+
                 <div className="conf-step__hall">
                     <div className="conf-step__hall-wrapper">
-                        <div className="conf-step__row">
-                            <span className="conf-step__chair conf-step__chair_disabled"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                            <span className="conf-step__chair conf-step__chair_disabled"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                            <span className="conf-step__chair conf-step__chair_disabled"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                        </div>
-                        <div className="conf-step__row">
-                            <span className="conf-step__chair conf-step__chair_disabled"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_disabled"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                        </div>
-                        <div className="conf-step__row">
-                            <span className="conf-step__chair conf-step__chair_disabled"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                        </div>
-                        <div className="conf-step__row">
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_vip"></span>
-                            <span className="conf-step__chair conf-step__chair_vip"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                        </div>
-                        <div className="conf-step__row">
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_vip"></span><span className="conf-step__chair conf-step__chair_vip"></span>
-                            <span className="conf-step__chair conf-step__chair_vip"></span><span className="conf-step__chair conf-step__chair_vip"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                        </div>
-                        <div className="conf-step__row">
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_vip"></span><span className="conf-step__chair conf-step__chair_vip"></span>
-                            <span className="conf-step__chair conf-step__chair_vip"></span><span className="conf-step__chair conf-step__chair_vip"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                        </div>
-                        <div className="conf-step__row">
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_standart"></span>
-                            <span className="conf-step__chair conf-step__chair_vip"></span><span className="conf-step__chair conf-step__chair_vip"></span>
-                            <span className="conf-step__chair conf-step__chair_vip"></span><span className="conf-step__chair conf-step__chair_vip"></span>
-                            <span className="conf-step__chair conf-step__chair_standart"></span><span className="conf-step__chair conf-step__chair_disabled"></span>
-                        </div>
+                        {halls[selectedHall]?.rows.map((el, ind) => {
+                            return <div key={`hallCongif_rows_${ind}`} className="conf-step__row">
+                                {halls[selectedHall]?.rows[ind].map((el, indd) => {
+                                    return <>
+                                        <span key={`hallCongif_row_${ind}_${indd}`} onClick={() => { handleClickSeat(ind, indd) }} className={`conf-step__chair conf-step__chair_${el}`}></span>
+                                    </>
+                                })}
+                            </div>
+                        })}
                     </div>
                 </div>
+
                 <fieldset className="conf-step__buttons text-center">
-                    <button className="conf-step__button conf-step__button-regular">Отмена</button>
-                    <input type="submit" value="Сохранить" className="conf-step__button conf-step__button-accent" />
+                    <button className="conf-step__button conf-step__button-regular" onClick={handleCancel}>Отмена</button>
+                    <input type="submit" value="Сохранить" className="conf-step__button conf-step__button-accent"  onClick={handleSave}/>
                 </fieldset>
             </div>
         </section>
