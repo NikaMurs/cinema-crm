@@ -52,8 +52,8 @@ export default function AdminMainPage() {
                     ['standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart'],
                 ],
                 price: {
-                    standart: 250,
-                    vip: 350,
+                    standart: 2500,
+                    vip: 3500,
                 },
                 seances: {
                     1: {
@@ -81,7 +81,10 @@ export default function AdminMainPage() {
                 halls={halls}
                 setHalls={setHalls}
             />
-            <SessionSchedule />
+            <SessionSchedule
+                halls={halls}
+                setHalls={setHalls}
+            />
             <OpenSales />
         </main>
     );
