@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import HallSelector from '../HallSelector';
 import SubmitButtons from '../SubmitButtons';
+import SeancesTimeline from './SeancesTimeline';
 
 export default function SessionSchedule({ halls, setHalls }) {
     const [selectedHall, setSelectedHall] = useState(0);
@@ -33,7 +34,6 @@ export default function SessionSchedule({ halls, setHalls }) {
         setSavedHallState(JSON.parse(JSON.stringify(halls[selectedHall])));
     };
 
-
     return (
         <section className="conf-step">
             <header className="conf-step__header conf-step__header_opened">
@@ -49,16 +49,21 @@ export default function SessionSchedule({ halls, setHalls }) {
                 />
 
                 <div className="conf-step__seances">
-                    <div className="conf-step__seances-hall">
+
+                    {/* <div className="conf-step__seances-hall">
                         <h3 className="conf-step__seances-title">Зал 1</h3>
                         <div className="conf-step__seances-timeline">
                             <div className="conf-step__seances-movie" style={{ width: "90px" }}>
                                 <p className="conf-step__seances-movie-title">Звёздные войны</p>
                                 <p className="conf-step__seances-movie-start">Начало: 10:00</p>
                             </div>
-                            
                         </div>
-                    </div>
+                    </div> */}
+                    <SeancesTimeline
+                        hallTitle={halls[selectedHall]?.title}
+                        seances={halls[selectedHall]?.seances}
+                    />
+
                 </div>
 
                 <SubmitButtons

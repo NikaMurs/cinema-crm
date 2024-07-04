@@ -4,6 +4,7 @@ import HallConfiguration from '../components/mainComponents/HallConfiguration';
 import PriceConfiguration from '../components/mainComponents/PriceConfiguration';
 import SessionSchedule from '../components/mainComponents/SessionSchedule';
 import OpenSales from '../components/mainComponents/OpenSales';
+import { duration } from 'moment';
 
 export default function AdminMainPage() {
     const [halls, setHalls] = useState([])
@@ -29,13 +30,20 @@ export default function AdminMainPage() {
                     standart: 250,
                     vip: 350,
                 },
-                seances: {
-                    1: {
-                        time: '19:00',
+                seances: [
+                    {
+                        time: '0:00',
                         filmId: 1,
-                        filmTitle: "Звездные войны"
+                        filmTitle: "Звездные войны",
+                        duration: '120m'
+                    },
+                    {
+                        time: '12:00',
+                        filmId: 2,
+                        filmTitle: 'Какой то фильм',
+                        duration: '180m'
                     }
-                },
+                ],
                 isActive: true,
             },
             {
@@ -55,13 +63,14 @@ export default function AdminMainPage() {
                     standart: 2500,
                     vip: 3500,
                 },
-                seances: {
-                    1: {
-                        time: '19:00',
+                seances: [
+                    {
+                        time: '19:30',
                         filmId: 1,
-                        filmTitle: "Звездные войны"
+                        filmTitle: "Звездные войны",
+                        duration: '120m'
                     }
-                },
+                ],
                 isActive: true,
             },
         ])
