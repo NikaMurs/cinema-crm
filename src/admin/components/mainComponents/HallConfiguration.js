@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import HallSelector from '../HallSelector';
+import SubmitButtons from '../SubmitButtons';
 
 export default function HallConfiguration({ halls, setHalls }) {
-    const [selectedHall, setSelestedHall] = useState(0);
+    const [selectedHall, setSelectedHall] = useState(0);
     const [rows, setRows] = useState(undefined);
     const [seats, setSeats] = useState(undefined);
     const [savedHallState, setSavedHallState] = useState(undefined);
 
     useEffect(() => {
-        if (!rows) {
-            setRows(halls[selectedHall]?.rows?.length);
-        }
-        if (!seats) {
-            setSeats(halls[selectedHall]?.rows[0]?.length);
-        }
-        if (!savedHallState) {
-            setSavedHallState(halls[selectedHall]);
+        if (halls[selectedHall]) {
+            if (!rows) {
+                setRows(halls[selectedHall]?.rows?.length);
+            }
+            if (!seats) {
+                setSeats(halls[selectedHall]?.rows[0]?.length);
+            }
+            if (!savedHallState) {
+                setSavedHallState(JSON.parse(JSON.stringify(halls[selectedHall])));
+            }
         }
     }, [halls])
 
@@ -24,10 +28,6 @@ export default function HallConfiguration({ halls, setHalls }) {
         setSavedHallState(halls[selectedHall])
     }, [selectedHall])
 
-    const handleClickHall = (ind) => {
-        setSelestedHall(ind);
-        handleCancel();
-    }
 
     const handleChangeRows = (e) => {
         let value = parseInt(e.target.value, 10);
@@ -136,13 +136,13 @@ export default function HallConfiguration({ halls, setHalls }) {
             newHallState[selectedHall] = savedHallState;
             return newHallState;
         });
-        setRows(savedHallState[selectedHall]?.rows?.length);
-        setSeats(savedHallState[selectedHall]?.rows[0]?.length);
+        setRows(savedHallState.rows?.length);
+        setSeats(savedHallState.rows[0]?.length);
     }
 
     const handleSave = () => {
         // fetch запрос на сохранение
-        setSavedHallState(halls[selectedHall]);
+        setSavedHallState(JSON.parse(JSON.stringify(halls[selectedHall])));
     }
 
     return (
@@ -151,12 +151,13 @@ export default function HallConfiguration({ halls, setHalls }) {
                 <h2 className="conf-step__title">Конфигурация залов</h2>
             </header>
             <div className="conf-step__wrapper">
-                <p className="conf-step__paragraph">Выберите зал для конфигурации:</p>
-                <ul className="conf-step__selectors-box">
-                    {halls.map((hall, ind) => {
-                        return <li key={`hallCongif_${ind}`} onClick={() => { handleClickHall(ind) }}><input type="radio" className="conf-step__radio" name="chairs-hall" value={hall.id} checked={ind === selectedHall} /><span className="conf-step__selector">{hall.title}</span></li>
-                    })}
-                </ul>
+                <HallSelector
+                    type="congif"
+                    halls={halls}
+                    selectedHall={selectedHall}
+                    setSelectedHall={setSelectedHall}
+                    handleCancel={handleCancel}
+                />
 
                 <p className="conf-step__paragraph">Укажите количество рядов и максимальное количество кресел в ряду:</p>
                 <div className="conf-step__legend">
@@ -186,10 +187,9 @@ export default function HallConfiguration({ halls, setHalls }) {
                     </div>
                 </div>
 
-                <fieldset className="conf-step__buttons text-center">
-                    <button className="conf-step__button conf-step__button-regular" onClick={handleCancel}>Отмена</button>
-                    <input type="submit" value="Сохранить" className="conf-step__button conf-step__button-accent"  onClick={handleSave}/>
-                </fieldset>
+                <SubmitButtons
+                    handleCancel={handleCancel}
+                    handleSave={handleSave} />
             </div>
         </section>
     );

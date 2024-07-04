@@ -77,9 +77,10 @@ export default function AdminMainPage() {
                 halls={halls}
                 setHalls={setHalls}
             />
-
-            
-            <PriceConfiguration />
+            <PriceConfiguration
+                halls={halls}
+                setHalls={setHalls}
+            />
             <SessionSchedule />
             <OpenSales />
         </main>
