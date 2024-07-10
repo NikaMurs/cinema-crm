@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import poster1 from '../../img/poster.png';
+import poster1 from '../../../img/poster.png';
 
 export default function FilmsList({ films, setFilms }) {
     const [showModal, setShowModal] = useState(false);

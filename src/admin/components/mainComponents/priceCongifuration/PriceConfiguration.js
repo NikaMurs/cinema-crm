@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import HallSelector from '../HallSelector';
-import SubmitButtons from '../SubmitButtons';
-import toggleMenu from '../../functions/toggleMenu';
+import HallSelector from '../../HallSelector';
+import SubmitButtons from '../../SubmitButtons';
+import toggleMenu from '../../../functions/toggleMenu';
+import PriceInput from './PriceInput';
 
 export default function PriceConfiguration({ halls, setHalls }) {
     const [selectedHall, setSelectedHall] = useState(0);
-    const [savedHallState, setSavedHallState] = useState(undefined);
+    const [savedHallState, setSavedHallState] = useState(0);
 
-    const [standartPrice, setStandartPrice] = useState(undefined);
-    const [vipPrice, setVipPrice] = useState(undefined);
+    const [standartPrice, setStandartPrice] = useState(0);
+    const [vipPrice, setVipPrice] = useState(0);
 
     useEffect(() => {
         if (halls[selectedHall]) {
-            if (standartPrice === undefined) {
+            if (!standartPrice) {
                 setStandartPrice(halls[selectedHall]?.price.standart);
             }
-            if (vipPrice === undefined) {
+            if (!vipPrice) {
                 setVipPrice(halls[selectedHall]?.price.vip);
             }
             if (!savedHallState) {
@@ -32,47 +33,34 @@ export default function PriceConfiguration({ halls, setHalls }) {
         }
     }, [selectedHall]);
 
-    const handleChangeStandart = (e) => {
-        let value = parseInt(e.target.value, 10);
-        if (isNaN(value) || value < 0) value = 0;
+    const handleChangeStandart = (value) => {
         setStandartPrice(value);
-
-        setHalls((prevHallState) => {
-            const newHallState = [...prevHallState];
-            newHallState[selectedHall] = {
-                ...newHallState[selectedHall],
-                price: {
-                    ...newHallState[selectedHall].price,
-                    standart: value,
-                },
-            };
-            return newHallState;
-        });
+        updateHallPrice('standart', value);
     };
 
-    const handleChangeVip = (e) => {
-        let value = parseInt(e.target.value, 10);
-        if (isNaN(value) || value < 0) value = 0;
+    const handleChangeVip = (value) => {
         setVipPrice(value);
+        updateHallPrice('vip', value);
+    };
 
-        setHalls((prevHallState) => {
-            const newHallState = [...prevHallState];
-            newHallState[selectedHall] = {
-                ...newHallState[selectedHall],
-                price: {
-                    ...newHallState[selectedHall].price,
-                    vip: value,
-                },
+    const updateHallPrice = (type, value) => {
+        setHalls((prevHalls) => {
+            const updatedHalls = [...prevHalls];
+            const updatedHall = { ...updatedHalls[selectedHall] };
+            updatedHall.price = {
+                ...updatedHall.price,
+                [type]: value,
             };
-            return newHallState;
+            updatedHalls[selectedHall] = updatedHall;
+            return updatedHalls;
         });
     };
 
     const handleCancel = () => {
-        setHalls((prevHallState) => {
-            const newHallState = [...prevHallState];
-            newHallState[selectedHall] = JSON.parse(JSON.stringify(savedHallState));
-            return newHallState;
+        setHalls((prevHalls) => {
+            const updatedHalls = [...prevHalls];
+            updatedHalls[selectedHall] = savedHallState;
+            return updatedHalls;
         });
         setStandartPrice(savedHallState.price.standart);
         setVipPrice(savedHallState.price.vip);
@@ -98,14 +86,19 @@ export default function PriceConfiguration({ halls, setHalls }) {
                 />
                 <p className="conf-step__paragraph">Установите цены для типов кресел:</p>
                 <div className="conf-step__legend">
-                    <label className="conf-step__label">Цена, рублей<input type="text" className="conf-step__input" value={standartPrice} onChange={handleChangeStandart} /></label>
+                    <PriceInput
+                        label="Цена, рублей"
+                        value={standartPrice}
+                        onChange={handleChangeStandart}
+                    />
                     <span className="multiplier">VIP кресло</span>
-                    <label className="conf-step__label">Цена, рублей<input type="text" className="conf-step__input" value={vipPrice} onChange={handleChangeVip} /></label>
+                    <PriceInput
+                        label="Цена, рублей"
+                        value={vipPrice}
+                        onChange={handleChangeVip}
+                    />
                 </div>
-
-                <SubmitButtons
-                    handleCancel={handleCancel}
-                    handleSave={handleSave} />
+                <SubmitButtons handleCancel={handleCancel} handleSave={handleSave} />
             </div>
         </section>
     );

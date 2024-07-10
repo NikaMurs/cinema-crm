@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import HallSelector from '../HallSelector';
-import toggleMenu from '../../functions/toggleMenu';
+import HallSelector from '../../HallSelector';
+import toggleMenu from '../../../functions/toggleMenu';
 
-export default function OpenSales({ halls, setHalls }) {
+const OpenSales = ({ halls, setHalls }) => {
     const [selectedHall, setSelectedHall] = useState(0);
 
     const toggleSales = () => {
-        // fetch запрос на сохранение
-        setHalls((prevHalls) => {
+        setHalls(prevHalls => {
             const newHalls = [...prevHalls];
             newHalls[selectedHall] = {
                 ...newHalls[selectedHall],
@@ -28,7 +27,7 @@ export default function OpenSales({ halls, setHalls }) {
                     halls={halls}
                     selectedHall={selectedHall}
                     setSelectedHall={setSelectedHall}
-                    handleCancel={() => { }}
+                    handleCancel={() => { /* handle cancel logic */ }}
                 />
                 <div className="conf-step__wrapper text-center" style={{ paddingLeft: '42px' }}>
                     <p className={`conf-step__paragraph ${halls[selectedHall]?.isActive ? 'text-green' : 'text-red'}`}>
@@ -44,4 +43,6 @@ export default function OpenSales({ halls, setHalls }) {
             </div>
         </section>
     );
-}
+};
+
+export default OpenSales;

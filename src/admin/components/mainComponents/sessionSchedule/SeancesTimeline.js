@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import trashImg from '../../img/trash.png'
+import trashImg from '../../../img/trash.png';
 
 export default function SeancesTimeline({ setHalls, hallId, hallTitle, seances, openSeanceModal }) {
     const [draggedSeance, setDraggedSeance] = useState(null);
@@ -31,12 +31,10 @@ export default function SeancesTimeline({ setHalls, hallId, hallTitle, seances, 
         event.preventDefault();
     };
 
-    const handleDelete = (hallId, seance) => {
+    const handleDelete = (seance) => {
         setHalls(prevState => {
-            // Find the hall in previous state
             const updatedHalls = prevState.map(hall => {
                 if (hall.id === hallId) {
-                    // Filter out the seance to be deleted
                     const updatedSeances = hall.seances.filter(item => item !== seance);
                     return { ...hall, seances: updatedSeances };
                 }
@@ -69,7 +67,6 @@ export default function SeancesTimeline({ setHalls, hallId, hallTitle, seances, 
                             draggable
                             onDragStart={() => handleDragStart(seance)}
                             onDragEnd={handleDragEnd}
-
                         >
                             <p className="conf-step__seances-movie-title">{seance.filmTitle}</p>
                             <p className="conf-step__seances-movie-start">{seance.time}</p>
@@ -80,9 +77,9 @@ export default function SeancesTimeline({ setHalls, hallId, hallTitle, seances, 
             <div
                 className="conf-step__seances-trash"
                 onDragOver={handleDragOver}
-                onDrop={() => handleDelete(hallId, draggedSeance)}
+                onDrop={() => handleDelete(draggedSeance)}
             >
-                <img class="trash-seance" src={trashImg} alert="Trash icon" style={{ display: 'block' }} />
+                <img className="trash-seance" src={trashImg} alt="Trash icon" style={{ display: 'block' }} />
             </div>
         </div>
     );
