@@ -4,10 +4,12 @@ import HallConfiguration from '../components/mainComponents/HallConfiguration';
 import PriceConfiguration from '../components/mainComponents/PriceConfiguration';
 import SessionSchedule from '../components/mainComponents/SessionSchedule';
 import OpenSales from '../components/mainComponents/OpenSales';
-import { duration } from 'moment';
+
+import poster1 from '../img/poster.png'
 
 export default function AdminMainPage() {
-    const [halls, setHalls] = useState([])
+    const [halls, setHalls] = useState([]);
+    const [films, setFilms] = useState([]);
 
     // fetch запрос на получение инфы о залах
     useEffect(() => {
@@ -76,6 +78,30 @@ export default function AdminMainPage() {
         ])
     }, [])
 
+    // fetch запрос на получение инфы о фильмах
+    useEffect(() => {
+        setFilms([
+            {
+                id: 1,
+                title: "Звездные войны",
+                duration: '120m',
+                filmDesription: "Супер интересный фильм про звездные войны",
+                country: 'США',
+                poster: poster1,
+            },
+            {
+                id: 2,
+                title: 'Какой то фильм',
+                duration: '180m',
+                filmDesription: "Описание для какого то фильма",
+                country: 'Неизвестно',
+                poster: poster1,
+            }
+        ])
+    }, [])
+
+
+
     return (
         <main className="conf-steps">
             <HallManagement
@@ -93,6 +119,8 @@ export default function AdminMainPage() {
             <SessionSchedule
                 halls={halls}
                 setHalls={setHalls}
+                films={films}
+                setFilms={setFilms}
             />
             <OpenSales />
         </main>
