@@ -31,7 +31,7 @@ html {
   font-size: 62.5%;
 }
 
-.admin-body  {
+.admin-body {
   background-image: url("../img/background.jpg");
   background-color: rgba(0, 0, 0, 0.5);
   background-blend-mode: multiply;
@@ -210,8 +210,18 @@ select {
 .conf-step__paragraph {
   font-size: 1.6rem;
   font-weight: 400;
-  color: #000000;
   margin-bottom: 12px;
+}
+
+.text-green {
+  font-weight: 600;
+  color: #008000;
+}
+
+
+.text-red {
+  font-weight: 600;
+  color: #fb3916;
 }
 
 .conf-step__paragraph:not(:first-of-type) {

@@ -73,7 +73,7 @@ export default function AdminMainPage() {
                         duration: '120m'
                     }
                 ],
-                isActive: true,
+                isActive: false,
             },
         ])
     }, [])
@@ -122,7 +122,10 @@ export default function AdminMainPage() {
                 films={films}
                 setFilms={setFilms}
             />
-            <OpenSales />
+            <OpenSales
+                halls={halls}
+                setHalls={setHalls}
+            />
         </main>
     );
 }

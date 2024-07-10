@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import HallSelector from '../HallSelector';
 import SubmitButtons from '../SubmitButtons';
+import toggleMenu from '../../functions/toggleMenu';
 
 export default function PriceConfiguration({ halls, setHalls }) {
     const [selectedHall, setSelectedHall] = useState(0);
@@ -84,7 +85,7 @@ export default function PriceConfiguration({ halls, setHalls }) {
 
     return (
         <section className="conf-step">
-            <header className="conf-step__header conf-step__header_opened">
+            <header className="conf-step__header conf-step__header_opened" onClick={toggleMenu}>
                 <h2 className="conf-step__title">Конфигурация цен</h2>
             </header>
             <div className="conf-step__wrapper">
