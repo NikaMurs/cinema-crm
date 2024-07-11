@@ -119,7 +119,7 @@ export default function FilmsList({ films, setFilms }) {
                                             </label>
                                             <label className="conf-step__label conf-step__label-fullsize" htmlFor="duration">
                                                 Продолжительность фильма (мин.)
-                                                <input className="conf-step__input" type="text" name="duration" placeholder="120" value={newFilm.duration} onChange={handleInputChange} required />
+                                                <input className="conf-step__input" type="time" name="duration" placeholder="120" value={newFilm.duration} onChange={handleInputChange} required />
                                             </label>
                                             <label className="conf-step__label conf-step__label-fullsize" htmlFor="description">
                                                 Описание фильма
