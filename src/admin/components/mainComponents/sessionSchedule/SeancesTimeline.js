@@ -68,8 +68,8 @@ export default function SeancesTimeline({ setHalls, hallId, hallTitle, seances, 
                             onDragStart={() => handleDragStart(seance)}
                             onDragEnd={handleDragEnd}
                         >
-                            <p className="conf-step__seances-movie-title">{seance.filmTitle}</p>
-                            <p className="conf-step__seances-movie-start">{seance.time}</p>
+                            <div className="conf-step__seances-movie-title">{seance.filmTitle}</div>
+                            <div className="conf-step__seances-movie-start">{seance.time}</div>
                         </div>
                     );
                 })}

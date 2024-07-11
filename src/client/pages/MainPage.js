@@ -1,5 +1,5 @@
 import DateSlider from '../components/DateSlider'
-import MovieCard from '../components/MovieCard/MovieCard'
+import MovieCard from '../components/movieCard/MovieCard'
 import poster1 from '../img/poster1.jpg'
 import poster2 from '../img/poster2.jpg'
 

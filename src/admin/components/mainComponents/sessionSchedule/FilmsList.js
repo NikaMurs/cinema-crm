@@ -82,7 +82,7 @@ export default function FilmsList({ films, setFilms }) {
                     >
                         <img className="conf-step__movie-poster" draggable="false" alt="poster" src={film.poster} width="100" height="100" />
                         <h3 className="conf-step__movie-title">{film.title}</h3>
-                        <p className="conf-step__movie-duration">{film.duration}</p>
+                        <div className="conf-step__movie-duration">{film.duration}</div>
                         <a href="#" draggable="false" onClick={(e) => { e.preventDefault(); }}><button
                             className="conf-step__button conf-step__button-trash"
                             data-film-id={film.id}
@@ -93,9 +93,9 @@ export default function FilmsList({ films, setFilms }) {
                 ))}
             </div>
 
-            <p className="conf-step__paragraph">
+            <div className="conf-step__paragraph">
                 <a href="#" onClick={(e) => { e.preventDefault(); setShowModal(true) }}><button className="conf-step__button conf-step__button-accent button__add-movie">Добавить фильм</button></a>
-            </p>
+            </div>
 
             {showModal && (
                 <div className="popup active">
@@ -156,7 +156,7 @@ export default function FilmsList({ films, setFilms }) {
                             </div>
                             <div className="popup__wrapper">
                                 <form onSubmit={(e) => { e.preventDefault(); handleDeleteFilm(); }} method="post" acceptCharset="utf-8">
-                                    <p className="conf-step__paragraph">Вы действительно хотите удалить фильм <span> "<b>{filmToDelete.title}</b>"</span>?</p>
+                                    <div className="conf-step__paragraph">Вы действительно хотите удалить фильм <span> "<b>{filmToDelete.title}</b>"</span>?</div>
                                     <div className="conf-step__buttons text-center">
                                         <input type="submit" value="Удалить" className="conf-step__button conf-step__button-accent" data-event="film_del" data-film-id={filmToDelete.id} />
                                         <button className="conf-step__button conf-step__button-regular" type="button" onClick={() => setFilmToDelete(null)}>Отменить</button>

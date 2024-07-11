@@ -30,9 +30,9 @@ const OpenSales = ({ halls, setHalls }) => {
                     handleCancel={() => { /* handle cancel logic */ }}
                 />
                 <div className="conf-step__wrapper text-center" style={{ paddingLeft: '42px' }}>
-                    <p className={`conf-step__paragraph ${halls[selectedHall]?.isActive ? 'text-green' : 'text-red'}`}>
+                    <div className={`conf-step__paragraph ${halls[selectedHall]?.isActive ? 'text-green' : 'text-red'}`}>
                         {halls[selectedHall]?.isActive ? 'Продажа открыта' : 'Продажа закрыта'}
-                    </p>
+                    </div>
                     <button
                         className="conf-step__button conf-step__button-accent"
                         onClick={toggleSales}

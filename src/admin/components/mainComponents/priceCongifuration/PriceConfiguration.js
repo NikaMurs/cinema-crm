@@ -84,7 +84,7 @@ export default function PriceConfiguration({ halls, setHalls }) {
                     setSelectedHall={setSelectedHall}
                     handleCancel={handleCancel}
                 />
-                <p className="conf-step__paragraph">Установите цены для типов кресел:</p>
+                <div className="conf-step__paragraph">Установите цены для типов кресел:</div>
                 <div className="conf-step__legend">
                     <PriceInput
                         label="Цена, рублей"

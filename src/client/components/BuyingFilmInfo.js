@@ -5,12 +5,9 @@ const BuyingFilmInfo = ({ filmTitle, hallTitle, selectedDay, time }) => {
         <div className="buying__info">
             <div className="buying__info-description">
                 <h2 className="buying__info-title">{filmTitle}</h2>
-                <p className="buying__info-start">Дата сеанса: {selectedDay} </p>
-                <p className="buying__info-start">Время сеанса: {time}</p>
-                <p className="buying__info-hall">{hallTitle}</p>
-            </div>
-            <div className="buying__info-hint">
-                <p>Тапните дважды,<br />чтобы увеличить</p>
+                <div className="buying__info-start">Дата сеанса: {selectedDay} </div>
+                <div className="buying__info-start">Время сеанса: {time}</div>
+                <div className="buying__info-hall">{hallTitle}</div>
             </div>
         </div>
     );

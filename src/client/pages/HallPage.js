@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom"
 import BuyingFilmInfo from "../components/BuyingFilmInfo";
-import HallScheme from "../components/HallScheme/HallSheme";
+import HallScheme from "../components/hallScheme/HallSheme";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../store/userReducer";
@@ -60,7 +60,7 @@ export default function HallPage() {
                         totalPrice={totalPrice} setTotalPrice={setTotalPrice}
                     />
 
-                    <p className="buying__price">Общая стоимость: <span className="ticket__details ticket__cost">{totalPrice}</span>р</p>
+                    <div className="buying__price">Общая стоимость: <span className="ticket__details ticket__cost">{totalPrice}</span>р</div>
 
                     <button className="acceptin-button" onClick={handleClick}>
                         Забронировать

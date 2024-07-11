@@ -13,7 +13,7 @@ export default function DeleteFilmModal({ filmToDelete, handleDeleteFilm, setFil
                     </div>
                     <div className="popup__wrapper">
                         <form onSubmit={(e) => { e.preventDefault(); handleDeleteFilm(); }} method="post" acceptCharset="utf-8">
-                            <p className="conf-step__paragraph">Вы действительно хотите удалить фильм <span> "<b>{filmToDelete.title}</b>"</span>?</p>
+                            <div className="conf-step__paragraph">Вы действительно хотите удалить фильм <span> "<b>{filmToDelete.title}</b>"</span>?</div>
                             <div className="conf-step__buttons text-center">
                                 <input type="submit" value="Удалить" className="conf-step__button conf-step__button-accent" data-event="film_del" data-film-id={filmToDelete.id} />
                                 <button className="conf-step__button conf-step__button-regular" type="button" onClick={() => setFilmToDelete(null)}>Отменить</button>

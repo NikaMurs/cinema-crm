@@ -5,6 +5,7 @@ import { configStore } from './store/configStore';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import { Normalize } from 'styled-normalize'
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -13,6 +14,7 @@ root.render(
   <React.StrictMode>
     <Provider store={configStore}>
       <BrowserRouter>
+        <Normalize />
         <App />
       </BrowserRouter>
     </Provider>

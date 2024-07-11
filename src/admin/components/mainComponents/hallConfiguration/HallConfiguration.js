@@ -109,7 +109,7 @@ export default function HallConfiguration({ halls, setHalls }) {
                     handleCancel={handleCancel}
                 />
 
-                <p className="conf-step__paragraph">Укажите количество рядов и максимальное количество кресел в ряду:</p>
+                <div className="conf-step__paragraph">Укажите количество рядов и максимальное количество кресел в ряду:</div>
                 <RowSeatsInput
                     rows={rows}
                     seats={seats}

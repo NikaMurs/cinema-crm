@@ -1,4 +1,3 @@
-import '../css/normalize.css'
 import '../css/styles.css'
 
 import Header from "./Header";

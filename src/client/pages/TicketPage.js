@@ -19,14 +19,14 @@ export default function TicketPage() {
                     </header>
 
                     <div className="ticket__info-wrapper">
-                        <p className="ticket__info">На фильм: <span className="ticket__details ticket__title">{selectedFilm.title}</span></p>
-                        <p className="ticket__info">Места: <span className="ticket__details ticket__chairs">
+                        <div className="ticket__info">На фильм: <span className="ticket__details ticket__title">{selectedFilm.title}</span></div>
+                        <div className="ticket__info">Места: <span className="ticket__details ticket__chairs">
                             {selectedChairs.map((el, ind) => {
                                 return ind === selectedChairs.length - 1 ? `${el}` : `${el}, `
                             })}
-                        </span></p>
-                        <p className="ticket__info">В зале: <span className="ticket__details ticket__hall">{selectedHall.title}</span></p>
-                        <p className="ticket__info">Начало сеанса: <span className="ticket__details ticket__start">{selectedDay} {selectedTime}</span></p>
+                        </span></div>
+                        <div className="ticket__info">В зале: <span className="ticket__details ticket__hall">{selectedHall.title}</span></div>
+                        <div className="ticket__info">Начало сеанса: <span className="ticket__details ticket__start">{selectedDay} {selectedTime}</span></div>
 
                         <QRCode
                             className='ticket__info-qr'
@@ -34,8 +34,8 @@ export default function TicketPage() {
                         />
 
                         {/* <img className="ticket__info-qr" src={qrCode} alt='qr код' /> */}
-                        <p className="ticket__hint">Покажите QR-код нашему контроллеру для подтверждения бронирования.</p>
-                        <p className="ticket__hint">Приятного просмотра!</p>
+                        <div className="ticket__hint">Покажите QR-код нашему контроллеру для подтверждения бронирования.</div>
+                        <div className="ticket__hint">Приятного просмотра!</div>
                     </div>
                 </section>
             </main>

@@ -34,7 +34,7 @@ export default function HallManagement({ halls, setHalls }) {
                     <h2 className="conf-step__title">Управление залами</h2>
                 </header>
                 <div className="conf-step__wrapper">
-                    <p className="conf-step__paragraph">Доступные залы:</p>
+                    <div className="conf-step__paragraph">Доступные залы:</div>
                     <ul className="conf-step__list">
                         {halls.map((hall) => (
                             <li key={hall.id}>

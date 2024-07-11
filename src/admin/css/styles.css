@@ -289,6 +289,7 @@ select {
 
 .conf-step__buttons {
   margin-top: 10px;
+  border: none;
 }
 
 .conf-step__button-regular {

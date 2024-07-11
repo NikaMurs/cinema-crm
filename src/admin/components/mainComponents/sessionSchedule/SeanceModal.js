@@ -15,7 +15,7 @@ export default function SeanceModal({ setShowModal, addSeance }) {
                         <form onSubmit={(e) => { e.preventDefault(); addSeance(e.target.elements.time.value); }} method="post" acceptCharset="utf-8">
                             <label className="conf-step__label conf-step__label-fullsize" htmlFor="time">
                                 Время начала
-                                <input className="conf-step__input" type="text" name="time" placeholder="15:00" required />
+                                <input className="conf-step__input" type="time" name="time" placeholder="15:00" required />
                             </label>
                             <div className="conf-step__buttons text-center">
                                 <input type="submit" value="Добавить сеанс" className="conf-step__button conf-step__button-accent" />
