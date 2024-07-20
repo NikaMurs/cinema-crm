@@ -3,7 +3,9 @@ const { Hall } = require('../models');
 // Получить все залы
 exports.getAllHalls = async (req, res) => {
     try {
-        const halls = await Hall.findAll();
+        const halls = await Hall.findAll({
+            order: [['id', 'ASC']]
+        });
         res.json(halls);
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -5,12 +5,14 @@ import SeancesTimeline from './SeancesTimeline';
 import FilmsList from './FilmsList';
 import SeanceModal from './SeanceModal';
 import toggleMenu from '../../../functions/toggleMenu';
+import moment from 'moment';
 
 export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
     const [selectedHall, setSelectedHall] = useState(0);
     const [savedHallState, setSavedHallState] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [filmToAdd, setFilmToAdd] = useState(null);
+    const [newSeances, setNewSeances] = useState([]);
 
     useEffect(() => {
         if (halls[selectedHall]) {
@@ -34,6 +36,12 @@ export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
         }
     };
 
+    function convertTimeToMinutes(time) {
+        const duration = moment.duration(moment(time, "HH:mm").format("HH:mm"), "HH:mm");
+        const minutes = duration.asMinutes();
+        return `${minutes}m`;
+    }
+
     const addSeance = (time) => {
         setHalls((prevHalls) => {
             const updatedHalls = prevHalls.map((hall, index) => {
@@ -46,7 +54,7 @@ export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
                                 filmId: filmToAdd.id,
                                 filmTitle: filmToAdd.title,
                                 time: time,
-                                duration: filmToAdd.duration
+                                duration: convertTimeToMinutes(filmToAdd.duration)
                             }
                         ]
                     };
@@ -55,6 +63,18 @@ export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
             });
             return updatedHalls;
         });
+
+        setNewSeances((prevState) => [
+            ...prevState,
+            {
+                filmId: filmToAdd.id,
+                filmTitle: filmToAdd.title,
+                time: time,
+                duration: convertTimeToMinutes(filmToAdd.duration),
+                hallId: halls[selectedHall].id
+            }
+        ]);
+
         setShowModal(false);
         setFilmToAdd(null);
     };
@@ -65,12 +85,35 @@ export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
             updatedHalls[selectedHall] = JSON.parse(JSON.stringify(savedHallState));
             return updatedHalls;
         });
+        setNewSeances([])
     };
 
-    const handleSave = () => {
-        // fetch запрос на сохранение
+    const handleSave = async () => {
+        const seancesToCreate = [...newSeances];
+
+        for (const seance of seancesToCreate) {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_URL}/seances`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(seance),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create seance');
+                }
+
+                const newSeance = await response.json();
+            } catch (error) {
+                console.error('Error creating seance:', error);
+            }
+        }
         setSavedHallState(JSON.parse(JSON.stringify(halls[selectedHall])));
+        setNewSeances([]);
     };
+
 
     return (
         <>
@@ -87,15 +130,19 @@ export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
                         handleCancel={handleCancel}
                     />
                     <FilmsList films={films} setFilms={setFilms} openSeanceModal={openSeanceModal} />
-                    <div className="conf-step__seances">
-                        <SeancesTimeline
-                            setHalls={setHalls}
-                            hallId={halls[selectedHall]?.id}
-                            hallTitle={halls[selectedHall]?.title}
-                            seances={halls[selectedHall]?.seances}
-                            openSeanceModal={openSeanceModal}
-                        />
-                    </div>
+                    {halls?.length ?
+                        <div className="conf-step__seances">
+                            <SeancesTimeline
+                                setHalls={setHalls}
+                                hallId={halls[selectedHall]?.id}
+                                hallTitle={halls[selectedHall]?.title}
+                                seances={halls[selectedHall]?.seances}
+                                openSeanceModal={openSeanceModal}
+                            />
+                        </div>
+                        :
+                        <></>
+                    }
                     <SubmitButtons handleCancel={handleCancel} handleSave={handleSave} />
                 </div>
             </section>

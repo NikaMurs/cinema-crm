@@ -5,27 +5,24 @@ import AddHallPopup from './AddHallPopup';
 export default function HallManagement({ halls, setHalls }) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-    const handleAddHall = (newHallName) => {
-        if (newHallName.trim() !== '') {
-            const newHall = {
-                id: halls.length ? halls[halls.length - 1].id + 1 : 1,
-                title: newHallName.trim(),
-                rows: [['standart']],
-                price: {
-                    standart: 0,
-                    vip: 0,
-                },
-                seances: {},
-                isActive: false,
-            };
-            setHalls([...halls, newHall]);
-            setIsPopupOpen(false);
+    const handleDeleteHall = async (hallId) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}/halls/${hallId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.status === 204) {
+                setHalls(halls.filter(hall => hall.id !== hallId));
+            } else if (response.status === 404) {
+                console.error('Hall not found');
+            } else {
+                console.error('Failed to delete hall');
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
     };
 
-    const handleDeleteHall = (hallId) => {
-        setHalls(halls.filter(hall => hall.id !== hallId));
-    };
 
     return (
         <>
@@ -57,7 +54,8 @@ export default function HallManagement({ halls, setHalls }) {
             <AddHallPopup
                 isOpen={isPopupOpen}
                 onClose={() => setIsPopupOpen(false)}
-                onAddHall={handleAddHall}
+                setHalls={setHalls}
+                halls={halls}
             />
         </>
     );

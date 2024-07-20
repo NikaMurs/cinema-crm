@@ -7,7 +7,8 @@ exports.getAllSeances = async (req, res) => {
             include: [
                 { model: Hall, attributes: ['title'] },
                 { model: Film, attributes: ['title', 'duration'] }
-            ]
+            ],
+            order: [['id', 'ASC']]
         });
         res.json(seances);
     } catch (error) {

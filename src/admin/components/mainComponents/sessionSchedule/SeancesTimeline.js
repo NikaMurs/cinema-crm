@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import trashImg from '../../../img/trash.png';
 
@@ -31,19 +31,35 @@ export default function SeancesTimeline({ setHalls, hallId, hallTitle, seances, 
         event.preventDefault();
     };
 
-    const handleDelete = (seance) => {
-        setHalls(prevState => {
-            const updatedHalls = prevState.map(hall => {
-                if (hall.id === hallId) {
-                    const updatedSeances = hall.seances.filter(item => item !== seance);
-                    return { ...hall, seances: updatedSeances };
-                }
-                return hall;
+    const handleDelete = async (seance) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}/seances/${seance.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
-
-            return updatedHalls;
-        });
+    
+            if (!response.ok) {
+                throw new Error('Failed to delete seance');
+            }
+    
+            setHalls(prevState => {
+                const updatedHalls = prevState.map(hall => {
+                    if (hall.id === hallId) {
+                        const updatedSeances = hall.seances.filter(item => item !== seance);
+                        return { ...hall, seances: updatedSeances };
+                    }
+                    return hall;
+                });
+    
+                return updatedHalls;
+            });
+        } catch (error) {
+            console.error('Error deleting seance:', error);
+        }
     };
+    
 
     return (
         <div className="conf-step__seances-hall" onDrop={handleDrop} onDragOver={handleDragOver}>

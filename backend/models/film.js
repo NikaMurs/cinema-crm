@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         filmDescription: {
-            type: DataTypes.TEXT,
+            type: DataTypes.STRING,
             allowNull: false
         },
         country: {
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         poster: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         }
     });
     return Film;

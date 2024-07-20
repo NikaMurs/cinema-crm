@@ -5,16 +5,36 @@ import toggleMenu from '../../../functions/toggleMenu';
 const OpenSales = ({ halls, setHalls }) => {
     const [selectedHall, setSelectedHall] = useState(0);
 
-    const toggleSales = () => {
-        setHalls(prevHalls => {
-            const newHalls = [...prevHalls];
-            newHalls[selectedHall] = {
-                ...newHalls[selectedHall],
-                isActive: !newHalls[selectedHall].isActive,
-            };
-            return newHalls;
-        });
+    const toggleSales = async () => {
+        try {
+            const hallData = JSON.parse(JSON.stringify(halls[selectedHall]));
+            hallData.isActive = !hallData.isActive;
+
+            const response = await fetch(`${process.env.REACT_APP_URL}/halls/${halls[selectedHall].id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(hallData)
+            });
+
+            if (response.ok) {
+                setHalls(prevHalls => {
+                    const newHalls = [...prevHalls];
+                    newHalls[selectedHall] = {
+                        ...newHalls[selectedHall],
+                        isActive: hallData.isActive,
+                    };
+                    return newHalls;
+                });
+            } else {
+                throw new Error('Ошибка при сохранении данных');
+            }
+        } catch (error) {
+            console.error('Ошибка при сохранении:', error);
+        }
     };
+
 
     return (
         <section className="conf-step">

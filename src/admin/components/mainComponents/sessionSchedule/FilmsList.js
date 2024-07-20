@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import poster1 from '../../../img/poster.png';
 
 export default function FilmsList({ films, setFilms }) {
     const [showModal, setShowModal] = useState(false);
@@ -8,31 +7,72 @@ export default function FilmsList({ films, setFilms }) {
     const [newFilm, setNewFilm] = useState({
         title: '',
         duration: '',
-        filmDesription: '',
+        filmDescription: '',
         country: '',
         poster: ''
     });
 
-    const handleAddFilm = (event) => {
-        event.preventDefault();
-        setFilms([...films, { ...newFilm, id: films.length + 1, poster: posterImage }]);
-        setNewFilm({
-            title: '',
-            duration: '',
-            filmDesription: '',
-            country: '',
-            poster: ''
-        });
-        setPosterImage(null)
-        setShowModal(false);
+    const base64ToFile = (base64String, filename) => {
+        const [header, data] = base64String.split(',');
+        const mime = header.match(/:(.*?);/)[1];
+        const binary = atob(data);
+        const array = [];
+        for (let i = 0; i < binary.length; i++) {
+            array.push(binary.charCodeAt(i));
+        }
+        return new File([new Uint8Array(array)], filename, { type: mime });
     };
+
+    const handleAddFilm = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData();
+        formData.append('title', newFilm.title);
+        formData.append('duration', newFilm.duration);
+        formData.append('filmDescription', newFilm.filmDescription);
+        formData.append('country', newFilm.country);
+
+        if (posterImage) {
+            const file = base64ToFile(posterImage, 'poster.png'); 
+            formData.append('poster', file);
+        }
+
+        try {
+            const response = await fetch(`${process.env.REACT_APP_URL}/films`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            setFilms([...films, result]);
+            setNewFilm({
+                title: '',
+                duration: '',
+                filmDescription: '',
+                country: '',
+                poster: ''
+            });
+            setPosterImage(null);
+            setShowModal(false);
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+
 
     const handleCancel = (event) => {
         event.preventDefault();
         setNewFilm({
             title: '',
             duration: '',
-            filmDesription: '',
+            filmDescription: '',
             country: '',
             poster: ''
         });
@@ -50,8 +90,19 @@ export default function FilmsList({ films, setFilms }) {
     };
 
     const handleDeleteFilm = () => {
-        setFilms(films.filter(film => film.id !== filmToDelete.id));
-        setFilmToDelete(null);
+        fetch(`${process.env.REACT_APP_URL}/films/${filmToDelete.id}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete film');
+                }
+                setFilms(films.filter(film => film.id !== filmToDelete.id));
+                setFilmToDelete(null);
+            })
+            .catch(error => {
+                console.error('Error deleting film:', error);
+            });
     };
 
     const handleDragStart = (event, filmId) => {
@@ -80,7 +131,7 @@ export default function FilmsList({ films, setFilms }) {
                         key={film.id}
                         onDragStart={(e) => handleDragStart(e, film.id)}
                     >
-                        <img className="conf-step__movie-poster" draggable="false" alt="poster" src={film.poster} width="100" height="100" />
+                        <img className="conf-step__movie-poster" draggable="false" alt="poster" src={`${process.env.REACT_APP_URL}/${film.poster}`} width="100" height="100" />
                         <h3 className="conf-step__movie-title">{film.title}</h3>
                         <div className="conf-step__movie-duration">{film.duration}</div>
                         <a href="#" draggable="false" onClick={(e) => { e.preventDefault(); }}><button
@@ -123,7 +174,7 @@ export default function FilmsList({ films, setFilms }) {
                                             </label>
                                             <label className="conf-step__label conf-step__label-fullsize" htmlFor="description">
                                                 Описание фильма
-                                                <textarea className="conf-step__input" name="filmDesription" placeholder="Описание фильма..." value={newFilm.filmDesription} onChange={handleInputChange} required></textarea>
+                                                <textarea className="conf-step__input" name="filmDescription" placeholder="Описание фильма..." value={newFilm.filmDescription} onChange={handleInputChange} required></textarea>
                                             </label>
                                             <label className="conf-step__label conf-step__label-fullsize" htmlFor="country">
                                                 Страна

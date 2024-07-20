@@ -1,13 +1,46 @@
 import React, { useState } from 'react';
 
-export default function AddHallPopup({ isOpen, onClose, onAddHall }) {
+export default function AddHallPopup({ isOpen, onClose, halls, setHalls }) {
     const [newHallName, setNewHallName] = useState('');
 
-    const handleAddHall = (e) => {
+    const handleAddHall = async (e) => {
         e.preventDefault();
-        onAddHall(newHallName);
-        setNewHallName('');
+
+        try {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: newHallName,
+                    rows: [],
+                    price: {
+                        standart: 0,
+                        vip: 0,
+                    },
+                    isActive: false,
+                })
+            };
+
+            const response = await fetch(`${process.env.REACT_APP_URL}/halls`, requestOptions);
+            let result = await response.json();
+            result.seances = [];
+
+
+            if (!response.ok) {
+                throw new Error('Failed to add hall');
+            } else {
+                setHalls([...halls, result]);
+            }
+
+            // const newHall = await response.json();
+
+            setNewHallName('');
+            onClose();
+        } catch (error) {
+            console.error('Error adding hall:', error.message);
+        }
     };
+
 
     return isOpen ? (
         <div className="popup active">

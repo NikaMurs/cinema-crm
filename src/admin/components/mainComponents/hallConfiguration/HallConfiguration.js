@@ -29,7 +29,9 @@ export default function HallConfiguration({ halls, setHalls }) {
     useEffect(() => {
         setRows(halls[selectedHall]?.rows?.length);
         setSeats(halls[selectedHall]?.rows[0]?.length);
-        setSavedHallState(halls[selectedHall])
+        if (halls[selectedHall]) {
+            setSavedHallState(JSON.parse(JSON.stringify(halls[selectedHall])));
+        }
     }, [selectedHall])
 
     const handleChangeRows = (newRows) => {
@@ -70,17 +72,37 @@ export default function HallConfiguration({ halls, setHalls }) {
     const handleCancel = () => {
         setHalls((prevHalls) => {
             const updatedHalls = [...prevHalls];
-            updatedHalls[selectedHall] = savedHallState;
+            updatedHalls[selectedHall] = JSON.parse(JSON.stringify(savedHallState));
             return updatedHalls;
         });
-        setRows(savedHallState.rows.length);
-        setSeats(savedHallState.rows[0].length);
+        setRows(savedHallState.rows?.length);
+        setSeats(savedHallState.rows[0]?.length);
     };
 
-    const handleSave = () => {
-        // fetch запрос на сохранение
-        setSavedHallState(JSON.parse(JSON.stringify(halls[selectedHall])));
+    const handleSave = async () => {
+        try {
+            const hallData = JSON.parse(JSON.stringify(halls[selectedHall]));
+
+            const response = await fetch(`${process.env.REACT_APP_URL}/halls/${halls[selectedHall].id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(hallData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при сохранении данных');
+            }
+
+            const updatedHall = await response.json();
+
+            setSavedHallState(updatedHall);
+        } catch (error) {
+            console.error('Ошибка при сохранении:', error);
+        }
     };
+
 
     const getNextSeatState = (currentSeatState) => {
         switch (currentSeatState) {
