@@ -32,12 +32,12 @@ export default function PaymentPage() {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error('Ошибка соединения');
             }
 
             navigate('/ticket');
         } catch (error) {
-            console.error('There was a problem with the booking request:', error);
+            console.error('Ошибка при бронировании билетов:', error);
         }
     };
 

@@ -95,13 +95,13 @@ export default function FilmsList({ films, setFilms }) {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to delete film');
+                    throw new Error('Ошибка удаления фильма');
                 }
                 setFilms(films.filter(film => film.id !== filmToDelete.id));
                 setFilmToDelete(null);
             })
             .catch(error => {
-                console.error('Error deleting film:', error);
+                console.error('Ошибка удаления фильма:', error);
             });
     };
 

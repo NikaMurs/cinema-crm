@@ -7,7 +7,6 @@ const Seance = require('./seance')(sequelize, Sequelize.DataTypes);
 const Booking = require('./booking')(sequelize, Sequelize.DataTypes);
 
 
-// Define relationships
 Hall.hasMany(Seance, { foreignKey: 'hallId' });
 Seance.belongsTo(Hall, { foreignKey: 'hallId' });
 

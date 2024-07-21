@@ -41,7 +41,7 @@ export default function SeancesTimeline({ setHalls, hallId, hallTitle, seances, 
             });
     
             if (!response.ok) {
-                throw new Error('Failed to delete seance');
+                throw new Error('Ошибка удаления сеанса');
             }
     
             setHalls(prevState => {
@@ -56,7 +56,7 @@ export default function SeancesTimeline({ setHalls, hallId, hallTitle, seances, 
                 return updatedHalls;
             });
         } catch (error) {
-            console.error('Error deleting seance:', error);
+            console.error('Ошибка удаления сеанса:', error);
         }
     };
     

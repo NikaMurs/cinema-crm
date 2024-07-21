@@ -1,6 +1,5 @@
 const { Seance, Hall, Film } = require('../models');
 
-// Получить все сеансы
 exports.getAllSeances = async (req, res) => {
     try {
         const seances = await Seance.findAll({
@@ -16,7 +15,6 @@ exports.getAllSeances = async (req, res) => {
     }
 };
 
-// Создать новый сеанс
 exports.createSeance = async (req, res) => {
     try {
         const newSeance = await Seance.create(req.body);
@@ -26,7 +24,6 @@ exports.createSeance = async (req, res) => {
     }
 };
 
-// Обновить информацию о сеансе
 exports.updateSeance = async (req, res) => {
     try {
         const seance = await Seance.findByPk(req.params.id);
@@ -41,7 +38,6 @@ exports.updateSeance = async (req, res) => {
     }
 };
 
-// Удалить сеанс
 exports.deleteSeance = async (req, res) => {
     try {
         const seance = await Seance.findByPk(req.params.id);

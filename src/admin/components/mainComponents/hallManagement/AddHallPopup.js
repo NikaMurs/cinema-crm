@@ -27,17 +27,15 @@ export default function AddHallPopup({ isOpen, onClose, halls, setHalls }) {
 
 
             if (!response.ok) {
-                throw new Error('Failed to add hall');
+                throw new Error('Ошибка создания зала');
             } else {
                 setHalls([...halls, result]);
             }
 
-            // const newHall = await response.json();
-
             setNewHallName('');
             onClose();
         } catch (error) {
-            console.error('Error adding hall:', error.message);
+            console.error('Ошибка создания зала:', error.message);
         }
     };
 

@@ -14,9 +14,9 @@ export default function HallManagement({ halls, setHalls }) {
             if (response.status === 204) {
                 setHalls(halls.filter(hall => hall.id !== hallId));
             } else if (response.status === 404) {
-                console.error('Hall not found');
+                console.error('Зал не найден');
             } else {
-                console.error('Failed to delete hall');
+                console.error('Ошибка удаления зала');
             }
         } catch (error) {
             console.error('Error:', error);

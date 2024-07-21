@@ -1,6 +1,5 @@
 const { Hall, Seance, Film } = require('../models');
 
-// Получить все залы
 exports.getAllHalls = async (req, res) => {
     try {
         const halls = await Hall.findAll({
@@ -12,7 +11,6 @@ exports.getAllHalls = async (req, res) => {
     }
 };
 
-// Создать новый зал
 exports.createHall = async (req, res) => {
     try {
         const newHall = await Hall.create(req.body);
@@ -22,7 +20,6 @@ exports.createHall = async (req, res) => {
     }
 };
 
-// Обновить информацию о зале
 exports.updateHall = async (req, res) => {
     try {
         const hall = await Hall.findByPk(req.params.id);
@@ -37,7 +34,6 @@ exports.updateHall = async (req, res) => {
     }
 };
 
-// Удалить зал
 exports.deleteHall = async (req, res) => {
     try {
         const hall = await Hall.findByPk(req.params.id);

@@ -25,7 +25,7 @@ export default function HallPage() {
             try {
                 const response = await fetch(`${process.env.REACT_APP_URL}/halls/${selectedHall.id}`);
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Ошибка соединения');
                 }
                 const data = await response.json();
                 return data;
@@ -45,7 +45,7 @@ export default function HallPage() {
 
                 const response = await fetch(`${process.env.REACT_APP_URL}/bookings/taken-seats?${params}`);
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Ошибка соединения');
                 }
                 const data = await response.json();
                 return data.takenChairs;
@@ -69,26 +69,6 @@ export default function HallPage() {
 
         fetchData();
     }, [])
-
-    //needFetch (запрос позиций зала)
-    // const hallInfo = {
-    //     title: 'Зал 1',
-    //     price: {
-    //         standart: 250,
-    //         vip: 350,
-    //     },
-    //     rows: [
-    //         ['disabled', 'disabled', 'disabled', 'disabled', 'disabled', 'standart', 'standart', 'disabled', 'disabled', 'disabled', 'disabled', 'disabled'],
-    //         ['disabled', 'disabled', 'disabled', 'disabled', 'taken', 'standart', 'standart', 'standart', 'disabled', 'disabled', 'disabled', 'disabled'],
-    //         ['disabled', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'disabled', 'disabled', 'disabled'],
-    //         ['standart', 'standart', 'standart', 'standart', 'vip', 'vip', 'vip', 'vip', 'standart', 'disabled', 'disabled', 'disabled'],
-    //         ['standart', 'standart', 'standart', 'standart', 'vip', 'vip', 'vip', 'vip', 'standart', 'disabled', 'disabled', 'disabled'],
-    //         ['standart', 'standart', 'standart', 'standart', 'standart', 'taken', 'taken', 'taken', 'standart', 'disabled', 'disabled', 'disabled'],
-    //         ['standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'disabled', 'disabled', 'disabled'],
-    //         ['standart', 'taken', 'standart', 'taken', 'standart', 'taken', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart'],
-    //         ['standart', 'standart', 'standart', 'standart', 'standart', 'taken', 'taken', 'taken', 'standart', 'standart', 'standart', 'standart'],
-    //     ]
-    // }
 
     const handleClick = () => {
         if (selectedChairs.length) {

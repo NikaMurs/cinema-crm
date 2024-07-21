@@ -2,7 +2,6 @@ const { Film } = require('../models');
 const path = require('path');
 const fs = require('fs');
 
-// Настройка Multer
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -18,11 +17,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Получить все фильмы
 exports.getAllFilms = async (req, res) => {
     try {
         const films = await Film.findAll({
-            order: [['id', 'ASC']]  // Сортировка по id в порядке возрастания
+            order: [['id', 'ASC']]
         });
         res.json(films);
     } catch (error) {
@@ -30,15 +28,12 @@ exports.getAllFilms = async (req, res) => {
     }
 };
 
-// Создать новый фильм
 exports.createFilm = async (req, res) => {
     upload.single('poster')(req, res, async (err) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
         
-        console.log('File Path:', req.file ? req.file.path : 'No file'); // Проверка пути
-
         const { title, duration, filmDescription, country } = req.body;
         const poster = req.file ? req.file.path : null;
 
@@ -51,7 +46,6 @@ exports.createFilm = async (req, res) => {
     });
 };
 
-// Обновить информацию о фильме
 exports.updateFilm = async (req, res) => {
     try {
         const film = await Film.findByPk(req.params.id);
@@ -68,7 +62,6 @@ exports.updateFilm = async (req, res) => {
     }
 };
 
-// Удалить фильм
 exports.deleteFilm = async (req, res) => {
     try {
         const film = await Film.findByPk(req.params.id);

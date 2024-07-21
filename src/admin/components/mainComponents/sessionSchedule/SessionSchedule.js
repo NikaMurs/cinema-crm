@@ -102,12 +102,12 @@ export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to create seance');
+                    throw new Error('Ошибка создания сеанса');
                 }
 
                 const newSeance = await response.json();
             } catch (error) {
-                console.error('Error creating seance:', error);
+                console.error('Ошибка создания сеанса:', error);
             }
         }
         setSavedHallState(JSON.parse(JSON.stringify(halls[selectedHall])));
