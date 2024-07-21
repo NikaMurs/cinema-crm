@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/cinema-crm/static/css/main.df7f293f.css",
+    "main.js": "/cinema-crm/static/js/main.90364bfe.js",
+    "static/js/488.3495f53c.chunk.js": "/cinema-crm/static/js/488.3495f53c.chunk.js",
+    "static/media/background.jpg": "/cinema-crm/static/media/background.8057f0e543a33be5a896.jpg",
+    "static/media/poster1.jpg": "/cinema-crm/static/media/poster1.7b508651539d9b8048d9.jpg",
+    "static/media/poster2.jpg": "/cinema-crm/static/media/poster2.710d95643b8e85052c67.jpg",
+    "static/media/trash.png": "/cinema-crm/static/media/trash.a6fd29509719f079bfd7.png",
+    "index.html": "/cinema-crm/index.html",
+    "main.df7f293f.css.map": "/cinema-crm/static/css/main.df7f293f.css.map",
+    "main.90364bfe.js.map": "/cinema-crm/static/js/main.90364bfe.js.map",
+    "488.3495f53c.chunk.js.map": "/cinema-crm/static/js/488.3495f53c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.df7f293f.css",
+    "static/js/main.90364bfe.js"
+  ]
+}
