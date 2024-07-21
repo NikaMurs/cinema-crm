@@ -1,4 +1,4 @@
-const { Hall } = require('../models');
+const { Hall, Seance, Film } = require('../models');
 
 // Получить все залы
 exports.getAllHalls = async (req, res) => {
@@ -44,6 +44,39 @@ exports.deleteHall = async (req, res) => {
         if (hall) {
             await hall.destroy();
             res.status(204).send();
+        } else {
+            res.status(404).json({ error: 'Hall not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.getHallById = async (req, res) => {
+    try {
+        const hall = await Hall.findByPk(req.params.id, {
+            include: {
+                model: Seance,
+                include: [Film]
+            }
+        });
+
+        if (hall) {
+            const seances = hall.Seances.map(seance => ({
+                time: seance.time,
+                filmId: seance.filmId,
+                filmTitle: seance.Film.title,
+                duration: seance.Film.duration
+            }));
+
+            res.json({
+                id: hall.id,
+                title: hall.title,
+                rows: hall.rows,
+                price: hall.price,
+                seances: seances,
+                isActive: hall.isActive
+            });
         } else {
             res.status(404).json({ error: 'Hall not found' });
         }

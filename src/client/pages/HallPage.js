@@ -1,9 +1,10 @@
 import { useNavigate, useLocation } from "react-router-dom"
 import BuyingFilmInfo from "../components/BuyingFilmInfo";
 import HallScheme from "../components/hallScheme/HallSheme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../store/userReducer";
+import convertDate from "../functions/convertDate";
 
 export default function HallPage() {
     const navigate = useNavigate();
@@ -17,26 +18,77 @@ export default function HallPage() {
 
     const [selectedChairs, setSelectedChairs] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [hallInfo, setHallInfo] = useState({});
+
+    useEffect(() => {
+        const fetchHall = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_URL}/halls/${selectedHall.id}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Ошибка при fetching данных:', error);
+            }
+        };
+
+        const fetchBookings = async () => {
+            try {
+                const params = new URLSearchParams({
+                    date: convertDate(selectedDay),
+                    time: selectedTime,
+                    hallId: selectedHall.id,
+                    filmId: selectedFilm.id,
+                });
+
+                const response = await fetch(`${process.env.REACT_APP_URL}/bookings/taken-seats?${params}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                return data.takenChairs;
+            } catch (error) {
+                console.error('Ошибка при fetching данных:', error);
+            }
+        };
+
+        const fetchData = async () => {
+            const [hallData, takenChairs] = await Promise.all([fetchHall(), fetchBookings()]);
+            if (hallData) {
+                const updatedRows = hallData.rows.map((row, rowIndex) =>
+                    row.map((seat, seatIndex) =>
+                        takenChairs.includes(`${rowIndex + 1}/${seatIndex + 1}`) ? 'taken' : seat
+                    )
+                );
+                hallData.rows = updatedRows;
+                setHallInfo(hallData);
+            }
+        };
+
+        fetchData();
+    }, [])
 
     //needFetch (запрос позиций зала)
-    const hallInfo = {
-        title: 'Зал 1',
-        price: {
-            standart: 250,
-            vip: 350,
-        },
-        rows: [
-            ['disabled', 'disabled', 'disabled', 'disabled', 'disabled', 'standart', 'standart', 'disabled', 'disabled', 'disabled', 'disabled', 'disabled'],
-            ['disabled', 'disabled', 'disabled', 'disabled', 'taken', 'standart', 'standart', 'standart', 'disabled', 'disabled', 'disabled', 'disabled'],
-            ['disabled', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'disabled', 'disabled', 'disabled'],
-            ['standart', 'standart', 'standart', 'standart', 'vip', 'vip', 'vip', 'vip', 'standart', 'disabled', 'disabled', 'disabled'],
-            ['standart', 'standart', 'standart', 'standart', 'vip', 'vip', 'vip', 'vip', 'standart', 'disabled', 'disabled', 'disabled'],
-            ['standart', 'standart', 'standart', 'standart', 'standart', 'taken', 'taken', 'taken', 'standart', 'disabled', 'disabled', 'disabled'],
-            ['standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'disabled', 'disabled', 'disabled'],
-            ['standart', 'taken', 'standart', 'taken', 'standart', 'taken', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart'],
-            ['standart', 'standart', 'standart', 'standart', 'standart', 'taken', 'taken', 'taken', 'standart', 'standart', 'standart', 'standart'],
-        ]
-    }
+    // const hallInfo = {
+    //     title: 'Зал 1',
+    //     price: {
+    //         standart: 250,
+    //         vip: 350,
+    //     },
+    //     rows: [
+    //         ['disabled', 'disabled', 'disabled', 'disabled', 'disabled', 'standart', 'standart', 'disabled', 'disabled', 'disabled', 'disabled', 'disabled'],
+    //         ['disabled', 'disabled', 'disabled', 'disabled', 'taken', 'standart', 'standart', 'standart', 'disabled', 'disabled', 'disabled', 'disabled'],
+    //         ['disabled', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'disabled', 'disabled', 'disabled'],
+    //         ['standart', 'standart', 'standart', 'standart', 'vip', 'vip', 'vip', 'vip', 'standart', 'disabled', 'disabled', 'disabled'],
+    //         ['standart', 'standart', 'standart', 'standart', 'vip', 'vip', 'vip', 'vip', 'standart', 'disabled', 'disabled', 'disabled'],
+    //         ['standart', 'standart', 'standart', 'standart', 'standart', 'taken', 'taken', 'taken', 'standart', 'disabled', 'disabled', 'disabled'],
+    //         ['standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart', 'disabled', 'disabled', 'disabled'],
+    //         ['standart', 'taken', 'standart', 'taken', 'standart', 'taken', 'standart', 'standart', 'standart', 'standart', 'standart', 'standart'],
+    //         ['standart', 'standart', 'standart', 'standart', 'standart', 'taken', 'taken', 'taken', 'standart', 'standart', 'standart', 'standart'],
+    //     ]
+    // }
 
     const handleClick = () => {
         if (selectedChairs.length) {

@@ -12,7 +12,7 @@ export default function MovieCard({ filmInfo }) {
     return (
         <section className="movie">
             <div className="movie__info">
-                <MoviePoster src={filmInfo.poster} alt={`${filmInfo.title} постер`} />
+                <MoviePoster src={`${process.env.REACT_APP_URL}/${filmInfo.poster}`} alt={`${filmInfo.title} постер`} />
                 <MovieDescription
                     title={filmInfo.title}
                     description={filmInfo.description}
