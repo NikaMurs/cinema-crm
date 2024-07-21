@@ -42,25 +42,54 @@ export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
         return `${minutes}m`;
     }
 
+    function parseMeasurement(measurement) {
+        const match = measurement.match(/^(\d+\.?\d*)/);
+        if (match) {
+            return parseInt(match[1]);
+        }
+        return NaN;
+    }
+
+    const isTimeOverlap = (existingSeances, newSeance) => {
+        const newStartTime = moment(newSeance.time, "HH:mm");
+        const newEndTime = moment(newStartTime).add(parseMeasurement(newSeance.duration), 'minutes');
+
+        return existingSeances.some(seance => {
+            const seanceStartTime = moment(seance.time, "HH:mm");
+            const seanceEndTime = moment(seanceStartTime).add(parseMeasurement(seance.duration), 'minutes');
+
+            return newStartTime.isBefore(seanceEndTime) && seanceStartTime.isBefore(newEndTime);
+        });
+    };
+
     const addSeance = (time) => {
+        const duration = convertTimeToMinutes(filmToAdd.duration);
+        const newSeance = {
+            filmId: filmToAdd.id,
+            filmTitle: filmToAdd.title,
+            time: time,
+            duration: duration
+        };
+
         setHalls((prevHalls) => {
             const updatedHalls = prevHalls.map((hall, index) => {
                 if (index === selectedHall) {
+                    if (isTimeOverlap(hall.seances, newSeance)) {
+                        alert('Новый сеанс пересекается с уже существующими.');
+                        return hall;
+                    }
+
                     return {
                         ...hall,
                         seances: [
                             ...hall.seances,
-                            {
-                                filmId: filmToAdd.id,
-                                filmTitle: filmToAdd.title,
-                                time: time,
-                                duration: convertTimeToMinutes(filmToAdd.duration)
-                            }
+                            newSeance
                         ]
                     };
                 }
                 return hall;
             });
+
             return updatedHalls;
         });
 
@@ -70,7 +99,7 @@ export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
                 filmId: filmToAdd.id,
                 filmTitle: filmToAdd.title,
                 time: time,
-                duration: convertTimeToMinutes(filmToAdd.duration),
+                duration: duration,
                 hallId: halls[selectedHall].id
             }
         ]);
@@ -78,6 +107,8 @@ export default function SessionSchedule({ halls, setHalls, films, setFilms }) {
         setShowModal(false);
         setFilmToAdd(null);
     };
+
+
 
     const handleCancel = () => {
         setHalls((prevHalls) => {
